@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Planilla de Mantenimiento Preventivo — Electroki</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Estilos específicos para celular / touch */
+        input, select, textarea {
+            font-size: 13px;
+        }
+
+        /* Estilos para impresión y exportación A4 */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 8mm;
+            }
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 9.5px !important;
+                line-height: 1.15 !important;
+            }
+            .print-container {
+                box-shadow: none !important;
+                border: none !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 !important;
+            }
+            input[type="text"], input[type="date"], input[type="number"], select, textarea {
+                border: none !important;
+                border-bottom: 1px dashed #64748b !important;
+                background: transparent !important;
+                border-radius: 0 !important;
+                padding: 1px 2px !important;
+                font-size: 9.5px !important;
+            }
+            .print-table th, .print-table td {
+                padding: 1.5px 3px !important;
+                font-size: 9px !important;
+            }
+            .page-break {
+                page-break-before: always !important;
+                break-before: page !important;
+            }
+            .section-compact {
+                margin-bottom: 6px !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 p-2 sm:p-4 min-h-screen">
+
+    <div class="max-w-4xl mx-auto">
+
+        <!-- Barra de herramientas superior (No imprimible) -->
+        <div class="no-print bg-white p-3 sm:p-4 rounded-xl shadow-md mb-4 flex flex-wrap justify-between items-center gap-3 border border-slate-200">
+            <div>
+                <h2 class="font-bold text-slate-800 text-sm sm:text-base">Planilla Digital de Mantenimiento — Electroki</h2>
+                <p class="text-xs text-slate-500">Optimizada para celular y PDF en A4</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="window.print()" class="bg-[#000865] hover:bg-blue-900 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition flex items-center gap-2 text-xs sm:text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Imprimir / PDF
+                </button>
+                <button onclick="limpiarFormulario()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2 px-3 rounded-lg transition text-xs sm:text-sm">
+                    Limpiar
+                </button>
+            </div>
+        </div>
+
+        <!-- Documento de la Planilla -->
+        <div class="print-container bg-white rounded-xl shadow-lg p-3 sm:p-5 border border-slate-200">
+            
+            <!-- PÁGINA 1: Encabezado, Datos y Parámetros Operativos -->
+            <div>
+                <!-- ENCABEZADO ELECTROKI -->
+                <div class="flex flex-row justify-between items-center border-b-2 border-[#000865] pb-2 mb-2.5 gap-2">
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-black tracking-wider text-[#000865] uppercase flex items-center gap-0.5">
+                            ELEC<span class="text-[#FF6B00]">T</span>ROKI
+                        </h1>
+                        <p class="text-[9px] sm:text-xs font-bold text-[#FF6B00] uppercase tracking-widest mt-0.5">Soluciones Electromecánicas y Climatización</p>
+                        <div class="text-xs text-slate-600 font-medium hidden sm:block">
+                            Planilla de Mantenimiento Preventivo — Cámaras Frigoríficas
+                        </div>
+                    </div>
+                    <div class="text-right bg-slate-50 p-2 rounded-lg border border-slate-200 shrink-0">
+                        <span class="text-[9px] sm:text-xs font-bold text-[#FF6B00] uppercase tracking-wide block">Orden de Servicio</span>
+                        <input type="text" placeholder="N° 0000-0000" class="text-xs sm:text-sm font-extrabold text-[#000865] bg-transparent border-b border-dashed border-slate-400 w-24 sm:w-28 text-center focus:outline-none focus:border-[#FF6B00]">
+                    </div>
+                </div>
+
+                <!-- DATOS DEL CLIENTE Y EQUIPO -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2.5 bg-slate-50 p-2 sm:p-2.5 rounded-lg border border-slate-200 text-xs section-compact">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-24 shrink-0">Cliente:</span>
+                            <input type="text" placeholder="Nombre o Razón Social" class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-24 shrink-0">Ubicación:</span>
+                            <input type="text" placeholder="Planta / Dirección / Sector" class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-24 shrink-0">Contacto:</span>
+                            <input type="text" placeholder="Nombre de Contacto / Encargado" class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-24 shrink-0">Teléfono:</span>
+                            <input type="text" placeholder="Número de Teléfono / Celular" class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-24 shrink-0">Fecha:</span>
+                            <input type="date" class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-24 shrink-0">Equipo / Ident.:</span>
+                            <input type="text" placeholder="Ej: Cámara Congelados N°1" class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-28 shrink-0">Mod./Marca U.C.:</span>
+                            <input type="text" placeholder="Marca / Modelo U. Condensadora" class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-28 shrink-0">N° Serie U.C.:</span>
+                            <input type="text" placeholder="Número de Serie U. Condensadora" class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-28 shrink-0">Mod./Marca Evap.:</span>
+                            <input type="text" placeholder="Marca / Modelo Evaporador" class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-28 shrink-0">N° Serie Evap.:</span>
+                            <input type="text" placeholder="Número de Serie Evaporador" class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-700 w-28 shrink-0">Refrigerante:</span>
+                            <select class="w-full bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]">
+                                <option value="">Seleccionar...</option>
+                                <option value="R22">R-22</option>
+                                <option value="R134a">R-134a</option>
+                                <option value="R404A">R-404A</option>
+                                <option value="R507">R-507</option>
+                                <option value="R448A/R449A">R-448A / R-449A</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LECTURAS OPERATIVAS Y PARÁMETROS -->
+                <div class="mb-2.5 section-compact">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-[#000865] bg-blue-50 px-2.5 py-1 rounded-t-lg border border-slate-300">
+                        1. Lecturas Operativas y Parámetros del Sistema
+                    </h3>
+                    <div class="border border-t-0 border-slate-300 rounded-b-lg p-2 bg-white grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+                        
+                        <!-- Presiones y Temperaturas -->
+                        <div class="space-y-1 border-b md:border-b-0 md:border-r border-slate-200 pb-2 md:pb-0 md:pr-2">
+                            <div class="font-semibold text-[#000865] border-b border-slate-200 pb-0.5 text-[11px]">Presiones y Temperaturas</div>
+                            
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Presión Succión:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.1" placeholder="0" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">PSI</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Presión Descarga:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.1" placeholder="0" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">PSI</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Temp. Cámara:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.1" placeholder="0" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">°C</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Temp. Ambiente:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.1" placeholder="0" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">°C</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Temp. Ent. Condensador:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.1" placeholder="0" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">°C</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Temp. Sal. Condensador:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.1" placeholder="0" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">°C</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Sobrecalentamiento:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.1" placeholder="0" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">K/°C</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tensión Trifásica -->
+                        <div class="space-y-1 border-b md:border-b-0 md:border-r border-slate-200 pb-2 md:pb-0 md:pr-2">
+                            <div class="font-semibold text-[#000865] border-b border-slate-200 pb-0.5 text-[11px]">Tensión Trifásica Terminales (V)</div>
+                            
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Línea L1 - L2:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="1" placeholder="380" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">V</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Línea L2 - L3:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="1" placeholder="380" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">V</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Línea L3 - L1:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="1" placeholder="380" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">V</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Consumo / Corriente Trifásica -->
+                        <div class="space-y-1">
+                            <div class="font-semibold text-[#000865] border-b border-slate-200 pb-0.5 text-[11px]">Corriente Compresor (A)</div>
+                            
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Fase L1:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.1" placeholder="0.0" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">A</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Fase L2:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.1" placeholder="0.0" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">A</span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center gap-1">
+                                <span class="text-slate-600">Fase L3:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.1" placeholder="0.0" class="w-14 border rounded px-1 py-0.5 text-right font-medium focus:ring-1 focus:ring-[#FF6B00]">
+                                    <span class="text-[10px] text-slate-500">A</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- PÁGINA 2: Tabla de Mantenimiento, Observaciones y Firmas -->
+            <div class="page-break">
+                <!-- TABLA DE CHECKLIST EXTENDIDA -->
+                <div class="mb-2.5 section-compact">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-blue-50 px-2.5 py-1 rounded-t-lg border border-slate-300 gap-1">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-[#000865]">
+                            2. Tabla de Mantenimiento Preventivo
+                        </h3>
+                        <div class="text-[9px] sm:text-[10px] font-semibold text-slate-600 bg-white px-1.5 py-0.5 rounded border border-slate-300">
+                            Frecuencia: <span class="font-bold text-[#FF6B00]">D</span>: Diaria | <span class="font-bold text-[#FF6B00]">M</span>: Mensual | <span class="font-bold text-[#FF6B00]">T</span>: Trimestral | <span class="font-bold text-[#FF6B00]">S</span>: Semestral | <span class="font-bold text-[#FF6B00]">A</span>: Anual
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto border border-t-0 border-slate-300 rounded-b-lg">
+                        <table class="w-full text-xs text-left print-table border-collapse">
+                            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-300 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-1 border-r border-slate-300 text-center w-7">#</th>
+                                    <th class="p-1 border-r border-slate-300">Descripción del Servicio / Tarea Preventiva</th>
+                                    <th class="p-1 border-r border-slate-300 text-center w-14">Frec.</th>
+                                    <th class="p-1 text-center w-28">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-700">
+                                
+                                <!-- SECCIÓN I -->
+                                <tr class="bg-blue-900/10 font-bold text-[#000865]">
+                                    <td colspan="4" class="p-0.5 px-2 border-y border-slate-300 text-[10px]">
+                                        I. INSPECCIÓN GENERAL Y ESTRUCTURAL DE LA CÁMARA
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">1</td>
+                                    <td class="p-1">Inspección general del estado del equipo y la cámara frigorífica</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">2</td>
+                                    <td class="p-1">Registro y monitoreo de temperatura de operación interior</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">D</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">3</td>
+                                    <td class="p-1">Verificación de hermeticidad en paneles, sellos y burletes de puertas</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">4</td>
+                                    <td class="p-1">Comprobación de la hacha de emergencia, hacha/alarma y apertura interior de seguridad</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <!-- SECCIÓN II -->
+                                <tr class="bg-blue-900/10 font-bold text-[#000865]">
+                                    <td colspan="4" class="p-0.5 px-2 border-y border-slate-300 text-[10px]">
+                                        II. SISTEMA ELÉCTRICO Y TABLERO DE CONTROL
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">5</td>
+                                    <td class="p-1">Verificación visual de la instalación y canalización eléctrica</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">6</td>
+                                    <td class="p-1">Medición de tensión (L1, L2, L3) y corriente de operación en consumo</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">7</td>
+                                    <td class="p-1">Ajuste y reapriete de borneras y terminales eléctricas en tablero y compresor</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">8</td>
+                                    <td class="p-1">Inspección de contactos en contactores, relés y componentes de maniobra</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">T</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">9</td>
+                                    <td class="p-1">Verificación y regulación de relés térmicos, guarda motores y protecciones</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">10</td>
+                                    <td class="p-1">Comprobación del correcto funcionamiento del calefactor de cárter</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">T</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <!-- SECCIÓN III -->
+                                <tr class="bg-blue-900/10 font-bold text-[#000865]">
+                                    <td colspan="4" class="p-0.5 px-2 border-y border-slate-300 text-[10px]">
+                                        III. UNIDAD CONDENSADORA Y COMPRESOR
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">11</td>
+                                    <td class="p-1">Inspección de obstrucciones, polvo o suciedad en el panal condensador</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">D</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">12</td>
+                                    <td class="p-1">Limpieza y lavado profundo (químico/mecánico) de aletas del condensador</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">13</td>
+                                    <td class="p-1">Verificación del nivel de aceite del compresor y búsqueda de fugas</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">D</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">14</td>
+                                    <td class="p-1">Verificación de ruidos anormales, golpeteos o vibraciones excesivas</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">D</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">15</td>
+                                    <td class="p-1">Medición de presiones de operación y temperaturas de trabajo en compresor</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">16</td>
+                                    <td class="p-1">Verificación y calibración de presostatos (Corte de alta y baja)</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">T</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">17</td>
+                                    <td class="p-1">Comprobación de visor/mirilla de líquido (Flujo continuo y ausencia de humedad)</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">18</td>
+                                    <td class="p-1">Prueba de acidez del aceite lubricante y verificación de filtro secador</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">S</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">19</td>
+                                    <td class="p-1">Revisión general y mantenimiento preventivo integral de compresor</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">A</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <!-- SECCIÓN IV -->
+                                <tr class="bg-blue-900/10 font-bold text-[#000865]">
+                                    <td colspan="4" class="p-0.5 px-2 border-y border-slate-300 text-[10px]">
+                                        IV. UNIDAD EVAPORADORA Y SISTEMA DE DESHIELO
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">20</td>
+                                    <td class="p-1">Inspección de flujo de aire, álabes y motores de ventiladores evaporadores</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">21</td>
+                                    <td class="p-1">Limpieza y desinfección de bandeja de condensado y tubería de drenaje</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">M</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">22</td>
+                                    <td class="p-1">Lavado de serpentín evaporador y alineado de aletas de aluminio</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">T</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">23</td>
+                                    <td class="p-1">Verificación de fijación, aislamiento y posición de bulbo de VTE</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">T</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">24</td>
+                                    <td class="p-1">Medición y ajuste del sobrecalentamiento útil en la salida del evaporador</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">T</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1 text-center font-medium">25</td>
+                                    <td class="p-1">Prueba y control de ciclo de deshielo (Resistencias eléctricos/Gas caliente)</td>
+                                    <td class="p-1 text-center font-bold text-[#000865]">T</td>
+                                    <td class="p-1 text-center">
+                                        <select class="border rounded px-1 py-0.5 text-xs w-full bg-white">
+                                            <option value="OK">✓ OK</option>
+                                            <option value="Atencion">⚠️ Revisa</option>
+                                            <option value="NA">N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- OBSERVACIONES GENERALES Y TRABAJOS PENDIENTES -->
+                <div class="mb-2.5 section-compact">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-[#000865] bg-blue-50 px-2.5 py-1 rounded-t-lg border border-slate-300">
+                        3. Observaciones / Repuestos Recomendados / Anomalías
+                    </h3>
+                    <div class="border border-t-0 border-slate-300 rounded-b-lg p-1.5 bg-white">
+                        <textarea rows="5" placeholder="Escriba aquí observaciones adicionales o recomendaciones técnico-comerciales..." class="w-full text-xs p-1.5 border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FF6B00] leading-relaxed"></textarea>
+                    </div>
+                </div>
+
+                <!-- FIRMAS DE CONFORMIDAD -->
+                <div class="grid grid-cols-2 gap-4 pt-2 border-t border-slate-300 text-xs section-compact">
+                    <div class="text-center space-y-3">
+                        <div class="border-b border-slate-400 pb-0.5 mx-2 sm:mx-4">
+                            <input type="text" placeholder="Nombre y Apellido Técnico" class="w-full text-center font-semibold bg-transparent focus:outline-none text-xs">
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-800 text-xs">Técnico Responsable</p>
+                            <p class="text-slate-500 text-[10px]">ELECTROKI — Servicios Electromecánicos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center space-y-3">
+                        <div class="border-b border-slate-400 pb-0.5 mx-2 sm:mx-4">
+                            <input type="text" placeholder="Nombre y CI de quien recibe" class="w-full text-center font-semibold bg-transparent focus:outline-none text-xs">
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-800 text-xs">Conformidad del Cliente</p>
+                            <p class="text-slate-500 text-[10px]">Firma / Aprobación de Servicio</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PIE DE PÁGINA -->
+                <div class="mt-2 pt-1 border-t border-slate-200 text-center text-[9px] text-slate-400">
+                    ELECTROKI — Soluciones Electromecánicas y Climatización | Documento de Servicio Técnico Preventivo
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function limpiarFormulario() {
+            if (confirm("¿Está seguro de que desea limpiar todos los campos cargados en la planilla?")) {
+                const inputs = document.querySelectorAll('input');
+                inputs.forEach(input => {
+                    if (input.type === 'text' || input.type === 'number' || input.type === 'date') {
+                        input.value = '';
+                    }
+                });
+                const selects = document.querySelectorAll('select');
+                selects.forEach(select => {
+                    select.selectedIndex = 0;
+                });
+                const textareas = document.querySelectorAll('textarea');
+                textareas.forEach(textarea => {
+                    textarea.value = '';
+                });
+            }
+        }
+    </script>
+</body>
+</html>
